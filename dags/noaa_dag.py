@@ -3,6 +3,7 @@ import datetime as dt
 from io import StringIO
 
 import requests
+from requests.adapters import HTTPAdapter, Retry
 import pandas as pd
 import airflow
 from airflow import DAG
@@ -18,6 +19,9 @@ def _get_session() -> (requests.Session, str):
     :return: requests session, base_url
     """
     session = requests.Session()
+    retries = Retry(total=5, backoff_factor=1, status_forcelist=[500, 502, 503, 504])
+    adapter = HTTPAdapter(max_retries=retries)
+    session.mount('https://', adapter)
     base_url = BASE_RUL
     return session, base_url
 
