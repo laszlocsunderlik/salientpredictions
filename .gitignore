@@ -4,3 +4,5 @@
 /logs
 /plugins
 /.env
+.idea/
+dags/__pycache__
