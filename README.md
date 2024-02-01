@@ -1,9 +1,6 @@
-Salient Predictions Task
+****Salient Predictions Task****
 
-Repository of the project: 
-https://github.com/laszlocsunderlik/salientpredictions
-
-Description of the GitHub repository:
+******Description of the GitHub repository:******
 
 This script is an Apache Airflow DAG (Directed Acyclic Graph) designed to download daily weather data from NOAA (National Oceanic and Atmospheric Administration) for specific weather stations: 14739 (Boston), 23169 (Las Vegas), 94846 (Chicago). The script organizes the data into a local archive and updates the archive with new data when the DAG is run. The exported file format is *.csv. 
 
