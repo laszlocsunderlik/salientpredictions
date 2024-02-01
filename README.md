@@ -97,5 +97,5 @@ The script is designed to automate the download and archiving of daily weather d
 3. Run `docker-compose build` to create the Docker image.
 3. Run `docker-compose up airflow-init` to create the necessary tables in the Airflow database.
 4. Run `docker-compose up` to start the Airflow web server, scheduler, and worker.
-5. Navigate to `http://localhost:8080` in your browser and enable the `ghcnd_weather_data_dag` DAG.
+5. Navigate to `http://localhost:8080` in your browser and enable the `NOAA` DAG.
 6. Trigger the DAG.
