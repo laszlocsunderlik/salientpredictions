@@ -46,16 +46,18 @@ def _get_station_name(station: str) -> str:
     return station.split(".")[0]
 
 
-def _print_infos(df: pd.DataFrame) -> None:
-    print("DataFrame Information:")
+def _print_infos(df: pd.DataFrame, station_code: str) -> None:
+    print("#" * 50)
+    print(f"Station: {station_code}")
+    print(f"DataFrame Information {station_code}:")
     print(df.info())
-    print("\nFirst 3 Rows:")
+    print(f"\nFirst 3 Rows {station_code}:")
     print(df.head(3))
-    print("\nSummary Statistics:")
+    print(f"\nSummary Statistics {station_code}:")
     print(df.describe())
-    print("\nMissing Values:")
+    print(f"\nMissing Values {station_code}:")
     print(df.isnull().sum())
-    print("\nCustom Print Statement:")
+    print(f"\nCustom Print Statement {station_code}:")
     print(f"The DataFrame has {df.shape[0]} rows and {df.shape[1]} columns.")
 
 
@@ -69,7 +71,7 @@ def build_ghcnd_archive(file_name: str, response: requests.Response, station_cod
     new_data = pd.read_csv(StringIO(response.text), low_memory=False)
     new_data_mod = _modify_schema(new_data)
 
-    _print_infos(df=new_data_mod)
+    _print_infos(df=new_data_mod, station_code=station_code
     new_data_mod.to_csv(file_name, index=False)
 
     # Save the execution date and latest datapoint date as Airflow variables
@@ -101,7 +103,7 @@ def update_ghcnd_archive(file_name: str, response: requests.Response, station_co
     else:
         updated_data = existing_data
 
-    _print_infos(df=updated_data)
+    _print_infos(df=updated_data, station_code=station_code)
     updated_data.to_csv(file_name, index=False)
 
 
