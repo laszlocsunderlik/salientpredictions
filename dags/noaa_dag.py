@@ -112,9 +112,10 @@ def set_airflow_variables(df: pd.DataFrame, station_code: str) -> None:
 
     # Save the execution date and latest datapoint date as Airflow variables
     Variable.set(f"{station_code}_last_run_date", dt.datetime.now().strftime("%Y-%m-%d"))
-    print(f"Last run date for {station_code}: {Variable.get('last_run_date')}")
+    print(f"Last run date for {station_code}: {Variable.get(f'{station_code}_last_run_date')}")
+
     Variable.set(f"{station_code}_latest_datapoint_date", latest_datapoint_date)
-    print(f"Latest datapoint date for {station_code}: {Variable.get('latest_datapoint_date')}")
+    print(f"Latest datapoint date for {station_code}: {Variable.get(f'{station_code}_latest_datapoint_date')}")
 
 
 with DAG(
@@ -127,8 +128,8 @@ with DAG(
     def fetch_daily_weather_data(station:str) -> None:
         """Downloads the daily csv file for a given stations"""
 
-        output_path = "../data"
-        os.makedirs(output_path, exist_ok=True)
+        # output_path = ""
+        # os.makedirs(output_path, exist_ok=True)
 
         session, url = _get_session()
 
@@ -138,7 +139,7 @@ with DAG(
         response.raise_for_status()
 
         # Include the execution date in the filename
-        file_name = f"{output_path}/{station}"
+        file_name = f"{station}"
 
         # Check if the file already exists locally
         if os.path.exists(file_name):
