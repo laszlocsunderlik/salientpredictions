@@ -6,4 +6,4 @@
 /.env
 .idea/
 dags/__pycache__
-dags/local_test.py
+local_test.py

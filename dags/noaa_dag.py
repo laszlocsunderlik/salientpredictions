@@ -71,7 +71,7 @@ def build_ghcnd_archive(file_name: str, response: requests.Response, station_cod
     new_data = pd.read_csv(StringIO(response.text), low_memory=False)
     new_data_mod = _modify_schema(new_data)
 
-    _print_infos(df=new_data_mod, station_code=station_code
+    _print_infos(df=new_data_mod, station_code=station_code)
     new_data_mod.to_csv(file_name, index=False)
 
     # Save the execution date and latest datapoint date as Airflow variables
@@ -124,7 +124,7 @@ with DAG(
     schedule_interval="@daily",
     catchup=True,
 ) as dag:
-    def fetch_daily_weather_data(station) -> None:
+    def fetch_daily_weather_data(station:str) -> None:
         """Downloads the daily csv file for a given stations"""
 
         output_path = "../data"
@@ -168,14 +168,20 @@ with DAG(
     fetch_weather_tasks = []
     for station in STATIONS:
         station_code = _get_station_name(station)
-        task_id = f"fetching weather for {station_code}"
+        task_id = f"fetching_weather_for_{station_code}"
         fetch_weather = PythonOperator(
             task_id=task_id,
             python_callable=fetch_daily_weather_data,
+            op_kwargs={'station': station},
             provide_context=True,
             dag=dag,
         )
         fetch_weather_tasks.append(fetch_weather)
 
     # Set up task dependencies
-    start_task >> fetch_weather_tasks >> end_task
+    for i in range(len(fetch_weather_tasks)):
+        if i == 0:
+            start_task >> fetch_weather_tasks[i]
+        else:
+            fetch_weather_tasks[i - 1] >> fetch_weather_tasks[i]
+        fetch_weather_tasks[-1] >> end_task
