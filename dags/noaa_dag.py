@@ -95,11 +95,11 @@ def update_ghcnd_archive(file_name: str, response: requests.Response, station_co
     set_airflow_variables(df=new_data_mod, station_code=station_code)
 
     # Find rows in new data that are not present in the existing data
-    ## TODO!! check this option dropna
     new_rows = new_data_mod[~new_data_mod.isin(existing_data)].dropna()
+    print(new_rows.head(10))
 
     if not new_rows.empty:
-        updated_data = existing_data.append(new_rows, ignore_index=True)
+        updated_data = pd.concat([existing_data, new_rows], ignore_index=True)
     else:
         updated_data = existing_data
 
